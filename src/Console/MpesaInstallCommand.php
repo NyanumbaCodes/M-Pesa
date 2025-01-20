@@ -58,7 +58,7 @@ class MpesaInstallCommand extends Command
         $destinationPath = public_path('mpesa/cert.cer');
 
         if (!$url) {
-            $this->error("Invalid environment specified. Use 'sandbox' or 'prod'.");
+            $this->error("Invalid environment specified. Use 'sandbox' or 'production'.");
             return Command::FAILURE;
         }
 

@@ -3,9 +3,9 @@
     "description": "MPESA Integration into Laravel and other php frameworks",
     "type": "library",
     "require": {
-        "laravel/framework": ">=10.0" ,
-        "illuminate/support": "^11.38",
         "php": ">=8.0",
+        "laravel/framework": ">=10.0" ,
+        "illuminate/support": ">=10.0",
         "illuminate/console": "*"
     },
     "license": "MIT",
@@ -26,7 +26,7 @@
                 "NyanumbaCodes\\Mpesa":"NyanumbaCodes\\Mpesa\\Facades\\Mpesa"
             },
             "providers":[
-                "NyanumbaCodes\\Mpesa\\Providers\\MpesaServiceProvider.php"
+                "NyanumbaCodes\\Mpesa\\Providers\\MpesaServiceProvider"
             ]
         }
     },
