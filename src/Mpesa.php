@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Http;
 class Mpesa
 {
     private $baseUrl;
+    private $initiatorName;
     private $consumerKey;
     private $consumerSecret;
 
@@ -21,6 +22,7 @@ class Mpesa
 
         $this->consumerKey = config('mpesa.consumer_key');
         $this->consumerSecret = config('mpesa.consumer_secret');
+        $this->initiatorName = config('mpesa.username');
     }
 
     /**
@@ -205,7 +207,7 @@ class Mpesa
             "{$this->baseUrl}/mpesa/b2c/v3/paymentrequest",
             [
                 "OriginatorConversationID" => $this->generateOriginatorConversationID(),
-                'InitiatorName' => 'Test Api',
+                'InitiatorName' => $this->initiatorName,
                 'SecurityCredential' => $this->generateSecurityCredential($securityCredential),
                 'CommandID' => 'SalaryPayment', // Options: BusinessPayment, SalaryPayment, PromotionPayment
                 'Amount' => $amount,
@@ -223,21 +225,20 @@ class Mpesa
     /**
      * Transaction Status
      * Check the status of a transaction
-     * @param mixed $initiator
-     * @param mixed $securityCredential
      * @param mixed $transactionId
      * @param mixed $originatorConversationId
      * @return mixed
      */
-    public function transactionStatus($initiator, $securityCredential, $transactionId, $originatorConversationId)
+    public function transactionStatus($transactionId, $originatorConversationId)
     {
         $url = "{$this->baseUrl}/mpesa/transactionstatus/v1/query";
         $token = $this->authorize();
+        $securityCredential = config('mpesa.security_credential');
 
         $response = Http::withToken($token)->post(
             $url,
             [
-                "Initiator" => $initiator,
+                "Initiator" => $this->initiatorName,
                 "SecurityCredential" => $this->generateSecurityCredential($securityCredential),
                 "CommandID" => "TransactionStatusQuery",
                 "TransactionID" => $transactionId,
@@ -267,7 +268,7 @@ class Mpesa
         $response = Http::withToken($token)->post(
             "{$this->baseUrl}/mpesa/accountbalance/v1/query",
             [
-                "Initiator" => "testapiuser",
+                "Initiator" => $this->initiatorName,
                 "SecurityCredential" => $this->generateSecurityCredential($securityCredential),
                 "CommandID" => "AccountBalance",
                 "PartyA" => config('mpesa.shortcode'),
@@ -296,7 +297,7 @@ class Mpesa
         $response = Http::withToken($token)->post(
             "{$this->baseUrl}/mpesa/reversal/v1/request",
             [
-                "Initiator" => "TestInit610",
+                "Initiator" => $this->initiatorName,
                 "SecurityCredential" => $this->generateSecurityCredential($securityCredential),
                 "CommandID" => "TransactionReversal",
                 "TransactionID" => $transactionId,
@@ -328,7 +329,7 @@ class Mpesa
         $response = Http::withToken($token)->post(
             "{$this->baseUrl}/mpesa/b2b/v1/remittax",
             [
-                "Initiator" => "TaxPayer",
+                "Initiator" => $this->initiatorName,
                 "SecurityCredential" => $this->generateSecurityCredential($securityCredential),
                 "CommandID" => "PayTaxToKRA",
                 "SenderIdentifierType" => "4",
@@ -364,7 +365,7 @@ class Mpesa
         $response = Http::withToken($token)->post(
             "{$this->baseUrl}/mpesa/b2b/v1/paymentrequest",
             [
-                "Initiator" => "API_Usename",
+                "Initiator" => $this->initiatorName,
                 "SecurityCredential" => $this->generateSecurityCredential($securityCredential),
                 "CommandID" => "BusinessPayBill",
                 "SenderIdentifierType" => "4",
@@ -399,7 +400,7 @@ class Mpesa
         $response = Http::withToken($token)->post(
             "{$this->baseUrl}/mpesa/b2b/v1/paymentrequest",
             [
-                "Initiator" => "API_Usename",
+                "Initiator" => $this->initiatorName,
                 "SecurityCredential" => $this->generateSecurityCredential($securityCredential),
                 "CommandID" => "BusinessBuyGoods",
                 "SenderIdentifierType" => "4",
@@ -460,7 +461,7 @@ class Mpesa
         $response = Http::withToken($token)->post(
             "{$this->baseUrl}/mpesa/b2b/v1/paymentrequest",
             [
-                "Initiator" => "testapi",
+                "Initiator" => $this->initiatorName,
                 "SecurityCredential" => "IAJVUHDGj0yDU3aop/WI9oSPhkW3DVlh7EAt3iRyymTZhljpzCNnI/xFKZNooOf8PUFgjmEOihUnB24adZDOv3Ri0Citk60LgMQnib0gjsoc9WnkHmGYqGtNivWE20jyIDUtEKLlPr3snV4d/H54uwSRVcsATEQPNl5n3+EGgJFIKQzZbhxDaftMnxQNGoIHF9+77tfIFzvhYQen352F4D0SmiqQ91TbVc2Jdfx/wd4HEdTBU7S6ALWfuCCqWICHMqCnpCi+Y/ow2JRjGYHdfgmcY8pP5oyH25uQk1RpWV744aj2UROjDrxTnE7a6tDN6G/dA21MXKaIsWJT/JyyXg==",
                 "CommandID" => "BusinessPayToBulk",
                 "SenderIdentifierType" => "4",

@@ -3,6 +3,7 @@
 
 return [
     'env' => env('MPESA_ENV', 'sandbox'),
+    'username'=>env('MPESA_USERNAME'),
     'consumer_key' => env('MPESA_CONSUMER_KEY'),
     'consumer_secret' => env('MPESA_CONSUMER_SECRET'),
     'security_credential' => env('MPESA_SECURITY_CREDENTIAL'),
